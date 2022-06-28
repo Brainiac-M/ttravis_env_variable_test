@@ -1,0 +1,23 @@
+language: node_js
+node_js:
+  - 13
+
+services:
+  - docker
+
+# Pre-testing installs
+install:
+  - echo "nothing needs to be installed"
+
+# Scripts to be run such as tests
+before_script:
+  - echo "no tests"
+
+script:
+  - docker --version # print the version for logging
+  - docker build -t ttravis_env_variable_test .
+  - docker tag ttravis_env_variable_test foxcoder508/ttravis_env_variable_test_docker:latest
+
+after_success:
+  - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
+  - docker push foxcoder508/ttravis_env_variable_test_docker
